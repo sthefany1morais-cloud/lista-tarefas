@@ -1,50 +1,67 @@
-# Welcome to your Expo app 👋
+# 📱 Lista de Tarefas (React Native)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicativo mobile de lista de tarefas desenvolvido com React Native utilizando Expo.
 
-## Get started
+Este projeto foi criado com o objetivo de aprofundar conhecimentos em desenvolvimento mobile, explorando conceitos fundamentais como gerenciamento de estado, navegação entre telas e manipulação de listas.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## ✨ Funcionalidades
 
-2. Start the app
+- ✅ Adicionar novas tarefas
+- 🗑️ Remover tarefas
+- ✔️ Marcar tarefas como concluídas
+- 🔄 Alternar entre tarefas pendentes e concluídas
+- 📱 Interface mobile simples e intuitiva
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 🧠 Sobre o projeto
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+A aplicação foi construída com foco em aprendizado prático, simulando um cenário real de uso com uma interface limpa e funcional.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+O app possui duas telas principais:
 
-## Get a fresh project
+- **A fazer** → exibe tarefas pendentes
+- **Concluídas** → exibe tarefas já finalizadas
 
-When you're ready, run:
+O usuário pode alternar entre essas telas e gerenciar suas tarefas de forma dinâmica.
 
-```bash
-npm run reset-project
-```
+---
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🎨 Design
 
-## Learn more
+A interface segue uma paleta moderna com tons de **roxo, azul e branco**, buscando uma experiência visual agradável e clara para o usuário.
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 🚀 Tecnologias utilizadas
 
-## Join the community
+- React Native
+- Expo
+- Typescript
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 📌 Próximos passos
+
+- 💾 Persistência de dados (AsyncStorage ou API)
+- 🎯 Melhorias de UI/UX
+- 🔔 Possível adição de notificações
+
+---
+
+## 💡 Motivação
+
+Este projeto faz parte da minha transição e aprofundamento em desenvolvimento mobile, complementando minha experiência prévia com React e Node.js.
+
+Além disso, ele também foi desenvolvido como preparação prática para oportunidades que envolvem React Native.
+
+---
+
+## 👩‍💻 Autora
+
+Desenvolvido por Sthefany Maria de Morais Jerônimo
+
+---
+# lista-tarefas
