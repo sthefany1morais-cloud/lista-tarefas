@@ -16,7 +16,6 @@ export type ColorPalette = {
   glass: string;
   glassActive: string;
   gradient: readonly [string, string];
-  // ✅ Cores para Button
   primaryBg: string;
   successBg: string;
   dangerBg: string;
@@ -40,7 +39,6 @@ export const Colors: Record<"light" | "dark", ColorPalette> = {
     glass: "rgba(255,255,255,0.1)",
     glassActive: "rgba(255,255,255,0.2)",
     gradient: ["#667eea", "#764ba2"] as const,
-    // ✅ Button backgrounds
     primaryBg: colors.primary[500],
     successBg: colors.success[400],
     dangerBg: colors.danger[500],
@@ -62,7 +60,6 @@ export const Colors: Record<"light" | "dark", ColorPalette> = {
     glass: "rgba(255,255,255,0.05)",
     glassActive: "rgba(255,255,255,0.1)",
     gradient: ["#1e293b", "#334155"] as const,
-    // ✅ Button backgrounds
     primaryBg: colors.primary[400],
     successBg: colors.success[400],
     dangerBg: colors.danger[500],
