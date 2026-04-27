@@ -21,7 +21,7 @@ export default function CompletedTasks() {
   } = useTasks();
 
   const { getGradient, getColor, isDark } = useDesignSystem();
-  const gradientColors = getGradient(); // ✅ string[] perfeito
+  const gradientColors = getGradient();
   const actionsBg = getColor("glassActive");
 
   const handleDeleteSelected = () => {

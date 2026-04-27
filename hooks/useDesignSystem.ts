@@ -14,7 +14,6 @@ export function useDesignSystem() {
   };
 
   const getGradient = (): string[] => {
-    // ✅ Conversão segura readonly -> mutable
     return Colors[colorScheme ?? "light"].gradient as unknown as string[];
   };
 

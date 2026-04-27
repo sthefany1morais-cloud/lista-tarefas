@@ -1,4 +1,3 @@
-// ✅ Tipos completos para TODAS as cores
 export type ColorShades50to900 = {
   50: string;
   100: string;
