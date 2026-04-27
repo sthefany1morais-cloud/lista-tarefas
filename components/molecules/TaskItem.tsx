@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import Checkbox from "../atoms/Checkbox";
 import Button from "../atoms/Button";
 import { Task } from "../../types/task";
@@ -23,12 +24,26 @@ export default function TaskItem({
   drag,
   isActive = false,
 }: TaskItemProps) {
+  const glassColor = useThemeColor({}, "glass");
+  const glassActiveColor = useThemeColor({}, "glassActive");
+  const textColor = useThemeColor({}, "text");
+
   return (
-    <View style={[styles.container, isActive && styles.containerActive]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: glassColor },
+        isSelected && { backgroundColor: glassActiveColor },
+      ]}
+    >
       <Checkbox checked={isSelected} onPress={onToggle} />
 
       <Text
-        style={[styles.text, task.completed && styles.textCompleted]}
+        style={[
+          styles.text,
+          { color: textColor },
+          task.completed && styles.textCompleted,
+        ]}
         numberOfLines={2}
       >
         {task.text}
@@ -45,18 +60,13 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.1)",
     borderRadius: 16,
     padding: 20,
     marginBottom: 12,
   },
-  containerActive: {
-    backgroundColor: "rgba(255,255,255,0.2)",
-  },
   text: {
     flex: 1,
     fontSize: 16,
-    color: "#fff",
     lineHeight: 22,
     marginLeft: 16,
   },

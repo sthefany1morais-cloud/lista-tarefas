@@ -5,10 +5,11 @@ import {
   StyleSheet,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useThemeColor } from "@/hooks/use-theme-color";
 
 type ButtonProps = TouchableOpacityProps & {
   icon: keyof typeof Ionicons.glyphMap;
-  variant?: "primary" | "danger" | "ghost";
+  variant?: "primary" | "success" | "danger" | "ghost";
 };
 
 export default function Button({
@@ -17,9 +18,11 @@ export default function Button({
   style,
   ...props
 }: ButtonProps) {
+  const bgColor = useThemeColor({}, `${variant}Bg` as const);
+
   return (
     <TouchableOpacity
-      style={[styles.button, styles[variant], style]}
+      style={[styles.button, { backgroundColor: bgColor }, style]}
       {...props}
     >
       <Ionicons name={icon} size={20} color="#fff" />
@@ -34,17 +37,5 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
-  },
-  primary: {
-    backgroundColor: "rgba(255,255,255,0.2)",
-  },
-  danger: {
-    backgroundColor: "rgba(255,107,107,0.3)",
-  },
-  ghost: {
-    backgroundColor: "rgba(255,255,255,0.1)",
-    padding: 8,
-    width: "auto",
-    height: "auto",
   },
 });

@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { useThemeColor } from "@/hooks/use-theme-color";
 
 type HeaderProps = {
   title: string;
@@ -7,10 +8,13 @@ type HeaderProps = {
 };
 
 export default function Header({ title, count }: HeaderProps) {
+  const titleColor = useThemeColor({}, "text");
+  const subtitleColor = useThemeColor({}, "textSecondary");
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.subtitle}>
+      <Text style={[styles.title, { color: titleColor }]}>{title}</Text>
+      <Text style={[styles.subtitle, { color: subtitleColor }]}>
         {count} {count === 1 ? "tarefa" : "tarefas"}
       </Text>
     </View>
@@ -25,11 +29,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#fff",
     marginBottom: 4,
   },
-  subtitle: {
-    fontSize: 16,
-    color: "rgba(255,255,255,0.8)",
-  },
+  subtitle: { fontSize: 16 },
 });

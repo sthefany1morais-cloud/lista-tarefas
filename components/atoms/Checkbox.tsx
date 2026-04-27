@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useThemeColor } from "@/hooks/use-theme-color";
 
 type CheckboxProps = {
   checked: boolean;
@@ -8,9 +9,18 @@ type CheckboxProps = {
 };
 
 export default function Checkbox({ checked, onPress }: CheckboxProps) {
+  const borderColor = useThemeColor({}, "textTertiary");
+  const successColor = useThemeColor({}, "success");
+
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <View style={[styles.checkbox, checked && styles.checkboxChecked]}>
+      <View
+        style={[
+          styles.checkbox,
+          checked && styles.checkboxChecked,
+          { borderColor },
+        ]}
+      >
         {checked && <Ionicons name="checkmark" size={16} color="#fff" />}
       </View>
     </TouchableOpacity>
@@ -18,15 +28,11 @@ export default function Checkbox({ checked, onPress }: CheckboxProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: 24,
-    height: 24,
-  },
+  container: { width: 24, height: 24 },
   checkbox: {
     flex: 1,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: "rgba(255,255,255,0.3)",
     justifyContent: "center",
     alignItems: "center",
   },

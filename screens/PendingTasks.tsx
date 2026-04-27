@@ -3,6 +3,7 @@ import { View, TextInput, FlatList, StyleSheet, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDesignSystem } from "@/hooks/useDesignSystem";
 import Header from "../components/molecules/Header";
 import TaskItem from "../components/molecules/TaskItem";
 import Button from "../components/atoms/Button";
@@ -21,6 +22,13 @@ export default function PendingTasks() {
   } = useTasks();
 
   const [inputText, setInputText] = useState("");
+
+  const { getGradient, getColor, isDark } = useDesignSystem();
+  const gradientColors = getGradient();
+  const inputBg = getColor("glass");
+  const inputColor = getColor("text");
+  const placeholderColor = getColor("textTertiary");
+  const actionsBg = getColor("glassActive");
 
   const handleAddTask = () => {
     if (inputText.trim()) {
@@ -63,25 +71,25 @@ export default function PendingTasks() {
   const hasSelection = pendingSelectedIds.length > 0;
 
   return (
-    <LinearGradient colors={["#667eea", "#764ba2"]} style={styles.container}>
-      <StatusBar barStyle="light-content" />
+    <LinearGradient colors={gradientColors as any} style={styles.container}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
       <SafeAreaView style={styles.safeArea}>
         <Header title="A fazer" count={pendingTasks.length} />
 
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer, { backgroundColor: inputBg }]}>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: inputColor }]}
             value={inputText}
             onChangeText={setInputText}
             placeholder="Nova tarefa..."
-            placeholderTextColor="#A0A0A0"
+            placeholderTextColor={placeholderColor}
             onSubmitEditing={handleAddTask}
           />
           <Button icon="add" onPress={handleAddTask} />
         </View>
 
         {hasSelection && (
-          <View style={styles.actionsRow}>
+          <View style={[styles.actionsRow, { backgroundColor: actionsBg }]}>
             <Button
               icon="checkmark-circle-outline"
               variant="primary"
@@ -113,14 +121,12 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, paddingHorizontal: 24 },
   inputContainer: {
     flexDirection: "row",
-    backgroundColor: "rgba(255,255,255,0.1)",
     borderRadius: 16,
     paddingHorizontal: 16,
     marginBottom: 24,
   },
   input: {
     flex: 1,
-    color: "#fff",
     fontSize: 16,
     paddingVertical: 16,
   },
@@ -129,6 +135,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     marginBottom: 16,
     gap: 12,
+    padding: 12,
+    borderRadius: 16,
   },
   list: { flex: 1 },
 });

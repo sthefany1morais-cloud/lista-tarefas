@@ -3,6 +3,7 @@ import { View, FlatList, StyleSheet, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDesignSystem } from "@/hooks/useDesignSystem";
 import Header from "../components/molecules/Header";
 import TaskItem from "../components/molecules/TaskItem";
 import Button from "../components/atoms/Button";
@@ -18,6 +19,10 @@ export default function CompletedTasks() {
     toggleTask,
     clearCompletedSelection,
   } = useTasks();
+
+  const { getGradient, getColor, isDark } = useDesignSystem();
+  const gradientColors = getGradient(); // ✅ string[] perfeito
+  const actionsBg = getColor("glassActive");
 
   const handleDeleteSelected = () => {
     if (completedSelectedIds.length === 0) return;
@@ -54,13 +59,13 @@ export default function CompletedTasks() {
   const hasSelection = completedSelectedIds.length > 0;
 
   return (
-    <LinearGradient colors={["#667eea", "#764ba2"]} style={styles.container}>
-      <StatusBar barStyle="light-content" />
+    <LinearGradient colors={gradientColors as any} style={styles.container}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
       <SafeAreaView style={styles.safeArea}>
         <Header title="Concluídas" count={completedTasks.length} />
 
         {hasSelection && (
-          <View style={styles.actionsRow}>
+          <View style={[styles.actionsRow, { backgroundColor: actionsBg }]}>
             <Button
               icon="radio-button-off"
               variant="primary"
@@ -95,6 +100,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     marginBottom: 16,
     gap: 12,
+    padding: 12,
+    borderRadius: 16,
   },
   list: { flex: 1 },
 });
