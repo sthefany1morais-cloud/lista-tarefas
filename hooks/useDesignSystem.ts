@@ -13,15 +13,13 @@ export function useDesignSystem() {
     return typeof color === "string" ? color : color[0];
   };
 
-  const getGradient = (): string[] => {
-    return Colors[colorScheme ?? "light"].gradient as unknown as string[];
-  };
+  const gradientColors = Colors[colorScheme ?? "light"].gradient as any;
 
   return {
     colorScheme,
     isDark,
     getColor,
-    getGradient,
+    gradientColors,
     useThemeColor,
   };
 }

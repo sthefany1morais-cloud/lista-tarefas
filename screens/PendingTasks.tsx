@@ -23,8 +23,7 @@ export default function PendingTasks() {
 
   const [inputText, setInputText] = useState("");
 
-  const { getGradient, getColor, isDark } = useDesignSystem();
-  const gradientColors = getGradient();
+  const { gradientColors, getColor, isDark } = useDesignSystem();
   const inputBg = getColor("glass");
   const inputColor = getColor("text");
   const placeholderColor = getColor("textTertiary");

@@ -5,6 +5,16 @@ export type Task = {
   createdAt: number;
 };
 
+export type Suggestion = Task & {
+  type: string;
+  participants: number;
+  price: number;
+  accessibility: number;
+  key: string;
+  link?: string;
+  accepted: boolean;
+};
+
 export type TasksContextType = {
   tasks: Task[];
   pendingTasks: Task[];

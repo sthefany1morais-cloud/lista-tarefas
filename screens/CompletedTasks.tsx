@@ -20,8 +20,7 @@ export default function CompletedTasks() {
     clearCompletedSelection,
   } = useTasks();
 
-  const { getGradient, getColor, isDark } = useDesignSystem();
-  const gradientColors = getGradient();
+  const { gradientColors, getColor, isDark } = useDesignSystem();
   const actionsBg = getColor("glassActive");
 
   const handleDeleteSelected = () => {
