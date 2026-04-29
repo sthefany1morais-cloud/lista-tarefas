@@ -7,6 +7,7 @@ import { useDesignSystem } from "@/hooks/useDesignSystem";
 import Header from "../components/molecules/Header";
 import TaskItem from "../components/molecules/TaskItem";
 import Button from "../components/atoms/Button";
+import EditTaskModal from "../components/molecules/EditTaskModal";
 import { useTasks } from "../contexts/TaskContext";
 import { Task } from "../types/task";
 
@@ -19,9 +20,12 @@ export default function PendingTasks() {
     addTask,
     clearPendingSelection,
     toggleTask,
+    updateTask,
   } = useTasks();
 
   const [inputText, setInputText] = useState("");
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const { gradientColors, getColor, isDark } = useDesignSystem();
   const inputBg = getColor("glass");
@@ -57,6 +61,16 @@ export default function PendingTasks() {
     clearPendingSelection();
   };
 
+  const openEditModal = (task: Task) => {
+    setEditingTask(task);
+    setEditModalVisible(true);
+  };
+
+  const handleSaveEdit = (id: string, newText: string) => {
+    updateTask(id, newText);
+    setEditModalVisible(false);
+  };
+
   const renderTask = ({ item }: { item: Task }) => (
     <TaskItem
       task={item}
@@ -64,6 +78,7 @@ export default function PendingTasks() {
       onSelect={togglePendingSelection}
       isSelected={pendingSelectedIds.includes(item.id)}
       showDragHandle={false}
+      onEdit={openEditModal}
     />
   );
 
@@ -109,6 +124,14 @@ export default function PendingTasks() {
           keyExtractor={(item) => item.id}
           style={styles.list}
           showsVerticalScrollIndicator={false}
+        />
+
+        {/* MODAL DE EDIÇÃO */}
+        <EditTaskModal
+          visible={editModalVisible}
+          task={editingTask}
+          onClose={() => setEditModalVisible(false)}
+          onSave={handleSaveEdit}
         />
       </SafeAreaView>
     </LinearGradient>

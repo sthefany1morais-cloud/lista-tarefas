@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import Checkbox from "../atoms/Checkbox";
 import Button from "../atoms/Button";
@@ -13,6 +13,7 @@ type TaskItemProps = {
   showDragHandle?: boolean;
   drag?: () => void;
   isActive?: boolean;
+  onEdit?: (task: Task) => void;
 };
 
 export default function TaskItem({
@@ -23,18 +24,22 @@ export default function TaskItem({
   showDragHandle = false,
   drag,
   isActive = false,
+  onEdit,
 }: TaskItemProps) {
   const glassColor = useThemeColor({}, "glass");
   const glassActiveColor = useThemeColor({}, "glassActive");
   const textColor = useThemeColor({}, "text");
 
   return (
-    <View
+    <TouchableOpacity
       style={[
         styles.container,
         { backgroundColor: glassColor },
         isSelected && { backgroundColor: glassActiveColor },
       ]}
+      onLongPress={() => onEdit?.(task)}
+      activeOpacity={0.8}
+      delayLongPress={500}
     >
       <Checkbox checked={isSelected} onPress={onToggle} />
 
@@ -52,7 +57,7 @@ export default function TaskItem({
       {showDragHandle && (
         <Button icon="reorder-three" variant="ghost" onPress={drag} />
       )}
-    </View>
+    </TouchableOpacity>
   );
 }
 

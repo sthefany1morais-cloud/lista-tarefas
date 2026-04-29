@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, FlatList, StyleSheet, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "react-native";
@@ -7,6 +7,7 @@ import { useDesignSystem } from "@/hooks/useDesignSystem";
 import Header from "../components/molecules/Header";
 import TaskItem from "../components/molecules/TaskItem";
 import Button from "../components/atoms/Button";
+import EditTaskModal from "../components/molecules/EditTaskModal";
 import { useTasks } from "../contexts/TaskContext";
 import { Task } from "../types/task";
 
@@ -18,7 +19,11 @@ export default function CompletedTasks() {
     deleteCompletedTasks,
     toggleTask,
     clearCompletedSelection,
+    updateTask,
   } = useTasks();
+
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const { gradientColors, getColor, isDark } = useDesignSystem();
   const actionsBg = getColor("glassActive");
@@ -45,6 +50,16 @@ export default function CompletedTasks() {
     clearCompletedSelection();
   };
 
+  const openEditModal = (task: Task) => {
+    setEditingTask(task);
+    setEditModalVisible(true);
+  };
+
+  const handleSaveEdit = (id: string, newText: string) => {
+    updateTask(id, newText);
+    setEditModalVisible(false);
+  };
+
   const renderTask = ({ item }: { item: Task }) => (
     <TaskItem
       task={item}
@@ -52,6 +67,7 @@ export default function CompletedTasks() {
       onSelect={toggleCompletedSelection}
       isSelected={completedSelectedIds.includes(item.id)}
       showDragHandle={false}
+      onEdit={openEditModal}
     />
   );
 
@@ -85,6 +101,14 @@ export default function CompletedTasks() {
           keyExtractor={(item) => item.id}
           style={styles.list}
           showsVerticalScrollIndicator={false}
+        />
+
+        {/* MODAL DE EDIÇÃO */}
+        <EditTaskModal
+          visible={editModalVisible}
+          task={editingTask}
+          onClose={() => setEditModalVisible(false)}
+          onSave={handleSaveEdit}
         />
       </SafeAreaView>
     </LinearGradient>

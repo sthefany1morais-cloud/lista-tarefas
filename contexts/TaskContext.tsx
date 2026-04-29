@@ -21,6 +21,7 @@ interface TaskContextType {
   clearCompletedSelection: () => void;
   deletePendingTasks: (ids: string[]) => void;
   deleteCompletedTasks: (ids: string[]) => void;
+  updateTask: (id: string, newText: string) => void;
 }
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
@@ -50,6 +51,16 @@ export function TaskProvider({ children }: { children: ReactNode }) {
         task.id === id ? { ...task, completed: !task.completed } : task,
       ),
     );
+  }, []);
+
+  const updateTask = useCallback((id: string, newText: string) => {
+    if (!newText.trim()) return;
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, text: newText.trim() } : task,
+      ),
+    );
+    console.log("Edit task:", id, newText);
   }, []);
 
   const togglePendingSelection = useCallback((id: string) => {
@@ -111,6 +122,7 @@ export function TaskProvider({ children }: { children: ReactNode }) {
         clearCompletedSelection,
         deletePendingTasks,
         deleteCompletedTasks,
+        updateTask,
       }}
     >
       {children}

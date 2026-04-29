@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   FlatList,
@@ -15,8 +15,8 @@ import { useDesignSystem } from "@/hooks/useDesignSystem";
 import Header from "../components/molecules/Header";
 import TaskItem from "../components/molecules/TaskItem";
 import Button from "../components/atoms/Button";
+import EditTaskModal from "../components/molecules/EditTaskModal";
 import { useSuggestions } from "@/contexts/SuggestionContext";
-import { useTasks } from "../contexts/TaskContext";
 import { Task, Suggestion } from "@/types/task";
 
 export default function Suggestions() {
@@ -31,7 +31,8 @@ export default function Suggestions() {
     acceptSuggestions,
   } = useSuggestions();
 
-  const { addTask } = useTasks();
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const { gradientColors, getColor, isDark } = useDesignSystem();
   const actionsBg = getColor("glassActive");
@@ -56,10 +57,16 @@ export default function Suggestions() {
     );
   };
 
+  const openEditModal = () => {
+    Alert.alert("Sugestões", "Sugestões não podem ser editadas");
+  };
+
+  const handleSaveEdit = () => {};
+
   const renderSuggestion = ({ item }: { item: Suggestion }) => {
     const fakeTask: Task = {
       id: item.id,
-      text: `💡 ${item.text}`,
+      text: `${item.text}`,
       completed: false,
       createdAt: item.createdAt || 0,
     };
@@ -71,6 +78,7 @@ export default function Suggestions() {
         onSelect={toggleSuggestionSelection}
         isSelected={suggestionSelectedIds.includes(item.id)}
         showDragHandle={false}
+        onEdit={openEditModal}
       />
     );
   };
@@ -122,6 +130,14 @@ export default function Suggestions() {
           keyExtractor={(item) => item.id}
           style={styles.list}
           showsVerticalScrollIndicator={false}
+        />
+
+        {/*MODAL (não abre pra sugestões)*/}
+        <EditTaskModal
+          visible={editModalVisible}
+          task={editingTask}
+          onClose={() => setEditModalVisible(false)}
+          onSave={handleSaveEdit}
         />
       </SafeAreaView>
     </LinearGradient>
