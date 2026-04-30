@@ -13,7 +13,6 @@ export default function RootLayout() {
   const loadTasks = useTaskStore((state) => state.loadTasks);
 
   useEffect(() => {
-    // ✅ Carrega tasks E esconde splash
     loadTasks().finally(async () => {
       await SplashScreen.hideAsync();
     });
