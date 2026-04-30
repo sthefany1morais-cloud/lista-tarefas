@@ -12,7 +12,6 @@ export default function TabLayout() {
   return (
     <TaskProvider>
       <SuggestionProvider>
-        {/* ✅ REMOVIDO A STRING SOLTA " " */}
         <Tabs
           screenOptions={{
             tabBarActiveTintColor: activeTintColor,

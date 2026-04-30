@@ -132,7 +132,6 @@ export default function Suggestions() {
           showsVerticalScrollIndicator={false}
         />
 
-        {/*MODAL (não abre pra sugestões)*/}
         <EditTaskModal
           visible={editModalVisible}
           task={editingTask}

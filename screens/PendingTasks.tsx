@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, TextInput, FlatList, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  TextInput,
+  FlatList,
+  StyleSheet,
+  Alert,
+  Keyboard,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,14 +16,16 @@ import TaskItem from "../components/molecules/TaskItem";
 import Button from "../components/atoms/Button";
 import EditTaskModal from "../components/molecules/EditTaskModal";
 import { useTasks } from "../contexts/TaskContext";
+import { useTaskData } from "../hooks/useTaskData";
 import { Task } from "../types/task";
+import { Text } from "react-native";
 
 export default function PendingTasks() {
+  const { pendingTasks, pendingSelectedIds, isLoading } = useTaskData();
+
   const {
-    pendingTasks,
-    pendingSelectedIds,
     togglePendingSelection,
-    deletePendingTasks,
+    deleteTasks,
     addTask,
     clearPendingSelection,
     toggleTask,
@@ -33,14 +42,15 @@ export default function PendingTasks() {
   const placeholderColor = getColor("textTertiary");
   const actionsBg = getColor("glassActive");
 
-  const handleAddTask = () => {
+  const handleAddTask = async () => {
     if (inputText.trim()) {
-      addTask(inputText);
+      await addTask(inputText.trim());
       setInputText("");
+      Keyboard.dismiss();
     }
   };
 
-  const handleDeleteSelected = () => {
+  const handleDeleteSelected = async () => {
     if (pendingSelectedIds.length === 0) return;
     Alert.alert(
       "Excluir tarefas",
@@ -50,14 +60,17 @@ export default function PendingTasks() {
         {
           text: "Excluir",
           style: "destructive",
-          onPress: () => deletePendingTasks(pendingSelectedIds),
+          onPress: () => deleteTasks(pendingSelectedIds),
         },
       ],
     );
   };
 
-  const handleMarkAsCompleted = () => {
-    pendingSelectedIds.forEach((id) => toggleTask(id));
+  const handleMarkAsCompleted = async () => {
+    if (pendingSelectedIds.length === 0) return;
+    for (const id of pendingSelectedIds) {
+      await toggleTask(id);
+    }
     clearPendingSelection();
   };
 
@@ -66,8 +79,8 @@ export default function PendingTasks() {
     setEditModalVisible(true);
   };
 
-  const handleSaveEdit = (id: string, newText: string) => {
-    updateTask(id, newText);
+  const handleSaveEdit = async (id: string, newText: string) => {
+    await updateTask(id, newText);
     setEditModalVisible(false);
   };
 
@@ -83,6 +96,20 @@ export default function PendingTasks() {
   );
 
   const hasSelection = pendingSelectedIds.length > 0;
+
+  if (isLoading) {
+    return (
+      <LinearGradient colors={gradientColors as any} style={styles.container}>
+        <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
+        <SafeAreaView style={styles.safeArea}>
+          <Header title="A fazer" count={0} />
+          <View style={styles.loadingContainer}>
+            <Text style={styles.loadingText}>Carregando...</Text>
+          </View>
+        </SafeAreaView>
+      </LinearGradient>
+    );
+  }
 
   return (
     <LinearGradient colors={gradientColors as any} style={styles.container}>
@@ -126,7 +153,6 @@ export default function PendingTasks() {
           showsVerticalScrollIndicator={false}
         />
 
-        {/* MODAL DE EDIÇÃO */}
         <EditTaskModal
           visible={editModalVisible}
           task={editingTask}
@@ -161,4 +187,13 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   list: { flex: 1 },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    fontSize: 16,
+    color: "#666",
+  },
 });

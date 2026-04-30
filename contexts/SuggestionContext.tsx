@@ -1,3 +1,4 @@
+"use client";
 import React, {
   createContext,
   useContext,
@@ -6,7 +7,7 @@ import React, {
   ReactNode,
 } from "react";
 import { getSuggestion } from "@/services/suggestions";
-import { useTasks } from "../contexts/TaskContext";
+import { useTaskStore } from "@/store/taskStore";
 import { Suggestion } from "@/types/task";
 import { suggestionToTask } from "@/utils/convertSuggestionToTask";
 
@@ -18,7 +19,7 @@ interface SuggestionContextType {
   toggleSuggestionSelection: (id: string) => void;
   clearSuggestionSelection: () => void;
   deleteSuggestions: (ids: string[]) => void;
-  acceptSuggestions: (ids: string[]) => void;
+  acceptSuggestions: (ids: string[]) => Promise<void>;
 }
 
 const SuggestionContext = createContext<SuggestionContextType | undefined>(
@@ -32,19 +33,19 @@ export function SuggestionProvider({ children }: { children: ReactNode }) {
     [],
   );
 
-  const { addTask } = useTasks();
+  const addTask = useTaskStore((state) => state.addTask); // ✅ Selector simples
 
   const getNewSuggestion = useCallback(async () => {
-    console.log("Nova sugestão...");
+    console.log("🔮 Nova sugestão...");
     setLoading(true);
     try {
       const newSuggestion = await getSuggestion();
       if (newSuggestion) {
-        console.log("Sugestão:", newSuggestion.text);
+        console.log("💡 Sugestão:", newSuggestion.text);
         setSuggestions((prev) => [newSuggestion, ...prev.slice(0, 4)]);
       }
     } catch (error) {
-      console.error("Erro:", error);
+      console.error("❌ Erro sugestão:", error);
     } finally {
       setLoading(false);
     }
@@ -71,15 +72,15 @@ export function SuggestionProvider({ children }: { children: ReactNode }) {
   );
 
   const acceptSuggestions = useCallback(
-    (ids: string[]) => {
-      ids.forEach((id) => {
+    async (ids: string[]) => {
+      for (const id of ids) {
         const suggestion = suggestions.find((s) => s.id === id);
         if (suggestion) {
           const task = suggestionToTask(suggestion);
-          addTask(task.text);
-          console.log("Movida para A fazer:", task.text);
+          await addTask(task.text);
+          console.log("✅ Movida para A fazer:", task.text);
         }
-      });
+      }
       deleteSuggestions(ids);
     },
     [suggestions, addTask, deleteSuggestions],
@@ -105,7 +106,8 @@ export function SuggestionProvider({ children }: { children: ReactNode }) {
 
 export function useSuggestions() {
   const context = useContext(SuggestionContext);
-  if (!context)
+  if (!context) {
     throw new Error("useSuggestions deve estar dentro de SuggestionProvider");
+  }
   return context;
 }

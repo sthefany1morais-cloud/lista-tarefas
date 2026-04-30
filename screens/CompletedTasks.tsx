@@ -9,14 +9,16 @@ import TaskItem from "../components/molecules/TaskItem";
 import Button from "../components/atoms/Button";
 import EditTaskModal from "../components/molecules/EditTaskModal";
 import { useTasks } from "../contexts/TaskContext";
+import { useTaskData } from "../hooks/useTaskData";
 import { Task } from "../types/task";
+import { Text } from "react-native";
 
 export default function CompletedTasks() {
+  const { completedTasks, completedSelectedIds, isLoading } = useTaskData();
+  
   const {
-    completedTasks,
-    completedSelectedIds,
     toggleCompletedSelection,
-    deleteCompletedTasks,
+    deleteTasks,
     toggleTask,
     clearCompletedSelection,
     updateTask,
@@ -28,7 +30,7 @@ export default function CompletedTasks() {
   const { gradientColors, getColor, isDark } = useDesignSystem();
   const actionsBg = getColor("glassActive");
 
-  const handleDeleteSelected = () => {
+  const handleDeleteSelected = async () => {
     if (completedSelectedIds.length === 0) return;
     Alert.alert(
       "Excluir tarefas",
@@ -38,15 +40,17 @@ export default function CompletedTasks() {
         {
           text: "Excluir",
           style: "destructive",
-          onPress: () => deleteCompletedTasks(completedSelectedIds),
+          onPress: () => deleteTasks(completedSelectedIds),
         },
       ],
     );
   };
 
-  const handleReactivateSelected = () => {
+  const handleReactivateSelected = async () => {
     if (completedSelectedIds.length === 0) return;
-    completedSelectedIds.forEach((id) => toggleTask(id));
+    for (const id of completedSelectedIds) {
+      await toggleTask(id);
+    }
     clearCompletedSelection();
   };
 
@@ -55,8 +59,8 @@ export default function CompletedTasks() {
     setEditModalVisible(true);
   };
 
-  const handleSaveEdit = (id: string, newText: string) => {
-    updateTask(id, newText);
+  const handleSaveEdit = async (id: string, newText: string) => {
+    await updateTask(id, newText);
     setEditModalVisible(false);
   };
 
@@ -72,6 +76,20 @@ export default function CompletedTasks() {
   );
 
   const hasSelection = completedSelectedIds.length > 0;
+
+  if (isLoading) {
+    return (
+      <LinearGradient colors={gradientColors as any} style={styles.container}>
+        <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
+        <SafeAreaView style={styles.safeArea}>
+          <Header title="Concluídas" count={0} />
+          <View style={styles.loadingContainer}>
+            <Text style={styles.loadingText}>Carregando...</Text>
+          </View>
+        </SafeAreaView>
+      </LinearGradient>
+    );
+  }
 
   return (
     <LinearGradient colors={gradientColors as any} style={styles.container}>
@@ -103,7 +121,6 @@ export default function CompletedTasks() {
           showsVerticalScrollIndicator={false}
         />
 
-        {/* MODAL DE EDIÇÃO */}
         <EditTaskModal
           visible={editModalVisible}
           task={editingTask}
@@ -127,4 +144,13 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   list: { flex: 1 },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    fontSize: 16,
+    color: "#666",
+  },
 });
