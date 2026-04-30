@@ -3,6 +3,12 @@ node_modules/
 .vscode/
 /.vscode/
 
+# AndroidStudio
+.idea/
+.idea
+*.iml
+*.hprof
+
 # Expo
 .expo/
 dist/
